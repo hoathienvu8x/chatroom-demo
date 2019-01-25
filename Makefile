@@ -1,9 +1,9 @@
 CC = g++
-CFLAGS = -c
+CFLAGS = -c -Wall
 LDFLAGS =
 SOURCES = main.cpp websocket.cpp sha1.cpp base64.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
-EXECUTABLE = quotesocket
+EXECUTABLE = chatroom
 
 all: $(SOURCES) $(EXECUTABLE)
 	

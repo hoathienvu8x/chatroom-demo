@@ -16,8 +16,8 @@
 using namespace std;
 
 typedef void (*nullCallback)();
-typedef void (*defaultCallback)(int);
-typedef void (*messageCallback)(int, string);
+typedef void (*defaultCallback)(size_t);
+typedef void (*messageCallback)(size_t, string);
 
 #define WS_FIN 128
 #define WS_MASK 128
@@ -94,29 +94,29 @@ public:
     void setPeriodicHandler(nullCallback callback);
     void startServer(int port);
     void stopServer();
-    bool wsSend(int clientID, string message, bool binary = false);
-    void wsClose(int clientID);
-    vector<int> getClientIDs();
-    string getClientIP(int clientID);
+    bool wsSend(size_t clientID, string message, bool binary = false);
+    void wsClose(size_t clientID);
+    vector<size_t> getClientIDs();
+    string getClientIP(size_t clientID);
 private:
     vector<wsClient *> wsClients;
     map<int, int> socketIDmap;
     fd_set fds;
-    int fdmax;
-    int listenfd;
+    size_t fdmax;
+    size_t listenfd;
 
     void wsCheckIdleClients();
-    bool wsSendClientMessage(int clientID, unsigned char opcode, string message);
-    void wsSendClientClose(int clientID, unsigned short status = -1);
-    bool wsCheckSizeClientFrame(int clientID);
-    void wsRemoveClient(int clientID);
-    bool wsProcessClientMessage(int clientID, unsigned char opcode, string data, int dataLength);
-    bool wsProcessClientFrame(int clientID);
-    bool wsBuildClientFrame(int clientID, char *buffer, int bufferLength);
-    bool wsProcessClientHandshake(int clientID, char *buffer);
-    bool wsProcessClient(int clientID, char *buffer, int bufferLength);
-    int wsGetNextClientID();
-    void wsAddClient(int socket, in_addr ip);
+    bool wsSendClientMessage(size_t clientID, unsigned char opcode, string message);
+    void wsSendClientClose(size_t clientID, unsigned short status = -1);
+    bool wsCheckSizeClientFrame(size_t clientID);
+    void wsRemoveClient(size_t clientID);
+    bool wsProcessClientMessage(size_t clientID, unsigned char opcode, string data, int dataLength);
+    bool wsProcessClientFrame(size_t clientID);
+    bool wsBuildClientFrame(size_t clientID, char *buffer, int bufferLength);
+    bool wsProcessClientHandshake(size_t clientID, char *buffer);
+    bool wsProcessClient(size_t clientID, char *buffer, int bufferLength);
+    size_t wsGetNextClientID();
+    void wsAddClient(size_t socket, in_addr ip);
 
     defaultCallback callOnOpen;
     defaultCallback callOnClose;

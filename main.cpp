@@ -10,12 +10,12 @@ using namespace std;
 webSocket server;
 
 /* called when a client connects */
-void openHandler(int clientID){
+void openHandler(size_t clientID){
     ostringstream os;
     os << "Stranger " << clientID << " has joined.";
 
-    vector<int> clientIDs = server.getClientIDs();
-    for (int i = 0; i < clientIDs.size(); i++){
+    vector<size_t> clientIDs = server.getClientIDs();
+    for (size_t i = 0; i < clientIDs.size(); i++){
         if (clientIDs[i] != clientID)
             server.wsSend(clientIDs[i], os.str());
     }
@@ -23,24 +23,24 @@ void openHandler(int clientID){
 }
 
 /* called when a client disconnects */
-void closeHandler(int clientID){
+void closeHandler(size_t clientID){
     ostringstream os;
     os << "Stranger " << clientID << " has leaved.";
 
-    vector<int> clientIDs = server.getClientIDs();
-    for (int i = 0; i < clientIDs.size(); i++){
+    vector<size_t> clientIDs = server.getClientIDs();
+    for (size_t i = 0; i < clientIDs.size(); i++){
         if (clientIDs[i] != clientID)
             server.wsSend(clientIDs[i], os.str());
     }
 }
 
 /* called when a client sends a message to the server */
-void messageHandler(int clientID, string message){
+void messageHandler(size_t clientID, string message){
     ostringstream os;
     os << "Stranger " << clientID << " says: " << message;
 
-    vector<int> clientIDs = server.getClientIDs();
-    for (int i = 0; i < clientIDs.size(); i++){
+    vector<size_t> clientIDs = server.getClientIDs();
+    for (size_t i = 0; i < clientIDs.size(); i++){
         if (clientIDs[i] != clientID)
             server.wsSend(clientIDs[i], os.str());
     }
@@ -56,8 +56,8 @@ void periodicHandler(){
         timestring = timestring.substr(0, timestring.size() - 1);
         os << timestring;
 
-        vector<int> clientIDs = server.getClientIDs();
-        for (int i = 0; i < clientIDs.size(); i++)
+        vector<size_t> clientIDs = server.getClientIDs();
+        for (size_t i = 0; i < clientIDs.size(); i++)
             server.wsSend(clientIDs[i], os.str());
 
         next = time(NULL) + 10;
