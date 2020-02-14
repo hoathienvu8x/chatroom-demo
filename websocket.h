@@ -94,6 +94,7 @@ public:
     void setPeriodicHandler(nullCallback callback);
     void startServer(int port);
     void stopServer();
+    bool wsSendCompleted(size_t clientID, string message);
     bool wsSend(size_t clientID, string message, bool binary = false);
     void wsClose(size_t clientID);
     vector<size_t> getClientIDs();
@@ -104,6 +105,7 @@ private:
     fd_set fds;
     size_t fdmax;
     size_t listenfd;
+    std::string bad_msg = "Request is not allowed";
 
     void wsCheckIdleClients();
     bool wsSendClientMessage(size_t clientID, unsigned char opcode, string message);

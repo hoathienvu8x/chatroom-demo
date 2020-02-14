@@ -492,6 +492,23 @@ bool webSocket::wsBuildClientFrame(size_t clientID, char *buffer, int bufferLeng
     return true;
 }
 
+bool webSocket::wsSendCompleted(size_t clientID, string message) {
+    int socket = wsClients[clientID]->socket;
+
+    int left = message.size();
+    do {
+        int sent = send(socket, message.c_str(), message.size(), 0);
+        if (sent == false) return false;
+
+        left -= sent;
+        if (sent > 0)
+            message = message.substr(sent);
+    }
+    while (left > 0);
+
+    return false;
+}
+
 bool webSocket::wsProcessClientHandshake(size_t clientID, char *buffer){
     // fetch headers and request line
     string buf(buffer);
@@ -560,11 +577,19 @@ bool webSocket::wsProcessClientHandshake(size_t clientID, char *buffer){
     }
 
     if (ws_key.size() == 0 || base64_decode(ws_key).size() != 16) {
-        return false;
+        string message = "HTTP/1.1 200 OK\r\nConnection: close\r\nContent-Type: text/plain\r\nContent-Length: ";
+        message.append(to_string(bad_msg.size()));
+        message.append("\r\n\r\n");
+        message.append(bad_msg);
+        return wsSendCompleted(clientID, message);
     }
 
     if (ws_version.size() == 0 || atoi(ws_version.c_str()) < 7) {
-        return false;
+        string message = "HTTP/1.1 200 OK\r\nConnection: close\r\nContent-Type: text/plain\r\nContent-Length: ";
+        message.append(to_string(bad_msg.size()));
+        message.append("\r\n\r\n");
+        message.append(bad_msg);
+        return  wsSendCompleted(clientID, message);
     }
 
     unsigned char hash[20];
