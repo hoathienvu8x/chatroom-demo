@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <ifaddrs.h>
 #elif _WIN32
-#include <WinSock2.h>
+#include <winsock2.h>
 #include <ws2tcpip.h>
 #include <iphlpapi.h>
 #pragma comment(lib, "ws2_32.lib")
